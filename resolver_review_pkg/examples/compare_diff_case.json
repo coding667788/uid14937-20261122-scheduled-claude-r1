@@ -1,0 +1,157 @@
+{
+  "mode": "compare",
+  "partitions": ["zone_alpha"],
+  "names": [
+    "app.alpha.internal",
+    "wide.alpha.internal",
+    "lonely.wide.alpha.internal",
+    "kept.wide.alpha.internal"
+  ],
+  "compare_fields": ["reachability", "name_list", "authorization"],
+  "limits": {"max_states": 200000},
+  "cache_a": {
+    "entries": [
+      {
+        "partition": "zone_alpha",
+        "name": "app.alpha.internal",
+        "kind": "positive",
+        "generation": "app-v1",
+        "deadline": 40,
+        "endpoint": "10.0.0.10"
+      }
+    ]
+  },
+  "cache_b": {
+    "entries": [
+      {
+        "partition": "zone_alpha",
+        "name": "app.alpha.internal",
+        "kind": "positive",
+        "generation": "app-v2",
+        "deadline": 40,
+        "endpoint": "10.0.0.20"
+      }
+    ]
+  },
+  "events": [
+    {
+      "id": "trust",
+      "slot": 0,
+      "etype": "trust_add",
+      "scope": {
+        "partition": "zone_alpha",
+        "suffix": "alpha.internal",
+        "generation": "scope-v1"
+      }
+    },
+    {
+      "id": "adm_v1",
+      "slot": 0,
+      "etype": "admission_add",
+      "admission": {
+        "admission_id": "ADM-V1",
+        "endpoint": "10.0.0.10",
+        "partition": "zone_alpha",
+        "generation": "adm-v1"
+      }
+    },
+    {
+      "id": "adm_v2",
+      "slot": 0,
+      "etype": "admission_add",
+      "after": ["adm_v1"],
+      "admission": {
+        "admission_id": "ADM-V2",
+        "endpoint": "10.0.0.20",
+        "partition": "zone_alpha",
+        "generation": "adm-v2"
+      }
+    },
+    {
+      "id": "up_app_v1",
+      "slot": 1,
+      "etype": "upsert",
+      "after": ["trust", "adm_v1"],
+      "record": {
+        "kind": "positive",
+        "partition": "zone_alpha",
+        "name": "app.alpha.internal",
+        "generation": "app-v1",
+        "value": "10.0.0.10"
+      }
+    },
+    {
+      "id": "up_wide_neg",
+      "slot": 2,
+      "etype": "upsert",
+      "after": ["trust"],
+      "record": {
+        "kind": "negative",
+        "partition": "zone_alpha",
+        "name": "wide.alpha.internal",
+        "generation": "wideneg-g1",
+        "proof": "PROOF-WIDE"
+      }
+    },
+    {
+      "id": "up_kept",
+      "slot": 2,
+      "etype": "upsert",
+      "after": ["up_wide_neg", "adm_v2"],
+      "record": {
+        "kind": "positive",
+        "partition": "zone_alpha",
+        "name": "kept.wide.alpha.internal",
+        "generation": "kept-g1",
+        "value": "10.0.0.20"
+      }
+    },
+    {
+      "id": "up_app_v2",
+      "slot": 3,
+      "etype": "upsert",
+      "after": ["up_app_v1", "adm_v2"],
+      "record": {
+        "kind": "positive",
+        "partition": "zone_alpha",
+        "name": "app.alpha.internal",
+        "generation": "app-v2",
+        "value": "10.0.0.20"
+      }
+    },
+    {
+      "id": "revoke_v1",
+      "slot": 6,
+      "etype": "revoke",
+      "after": ["up_app_v2"],
+      "partition": "zone_alpha",
+      "generation": "app-v1"
+    },
+    {
+      "id": "req_app",
+      "slot": 5,
+      "etype": "request",
+      "after": ["up_app_v2"],
+      "request": {
+        "name": "app.alpha.internal",
+        "service": "svc_x",
+        "partition": "zone_alpha",
+        "lo": 4,
+        "hi": 12
+      }
+    },
+    {
+      "id": "req_lonely",
+      "slot": 5,
+      "etype": "request",
+      "after": ["up_kept"],
+      "request": {
+        "name": "lonely.wide.alpha.internal",
+        "service": "svc_x",
+        "partition": "zone_alpha",
+        "lo": 4,
+        "hi": 12
+      }
+    }
+  ]
+}

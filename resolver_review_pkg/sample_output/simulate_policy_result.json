@@ -1,0 +1,332 @@
+{
+  "ok": true,
+  "result": {
+    "final_cache": [
+      {
+        "deadline": 2147483647,
+        "endpoint": "10.0.0.1",
+        "generation": "kept-g1",
+        "kind": "positive",
+        "name": "kept.wide.pa",
+        "partition": "zone_pa"
+      },
+      {
+        "deadline": 2147483647,
+        "generation": "wide-neg-g1",
+        "kind": "negative",
+        "name": "lonely.wide.pa",
+        "partition": "zone_pa",
+        "proof": "PROOF-WIDE"
+      },
+      {
+        "deadline": 2147483647,
+        "endpoint": "10.0.0.1",
+        "generation": "ok-g1",
+        "kind": "positive",
+        "name": "ok.pa",
+        "partition": "zone_pa"
+      }
+    ],
+    "mode": "simulate",
+    "requests": 6,
+    "timeline": [
+      {
+        "etype": "trust_add",
+        "event_id": "trust_pa",
+        "slot": 0
+      },
+      {
+        "etype": "trust_add",
+        "event_id": "trust_pb",
+        "slot": 0
+      },
+      {
+        "etype": "admission_add",
+        "event_id": "adm_ok",
+        "slot": 0
+      },
+      {
+        "etype": "upsert",
+        "event_id": "up_pa_ok",
+        "slot": 1
+      },
+      {
+        "etype": "upsert",
+        "event_id": "up_pb_root_neg",
+        "slot": 1
+      },
+      {
+        "etype": "upsert",
+        "event_id": "up_pa_wide_neg",
+        "slot": 2
+      },
+      {
+        "etype": "upsert",
+        "event_id": "up_pa_kept",
+        "slot": 2
+      },
+      {
+        "etype": "upsert",
+        "event_id": "up_pa_unadm",
+        "slot": 3
+      },
+      {
+        "etype": "upsert",
+        "event_id": "up_loop_x",
+        "slot": 4
+      },
+      {
+        "etype": "upsert",
+        "event_id": "up_loop_y",
+        "slot": 4
+      },
+      {
+        "cache_after": [
+          {
+            "deadline": 2147483647,
+            "endpoint": "10.0.0.1",
+            "generation": "ok-g1",
+            "kind": "positive",
+            "name": "ok.pa",
+            "partition": "zone_pa"
+          }
+        ],
+        "cache_entry_deadline": 2147483647,
+        "etype": "request",
+        "event_id": "req_cross_partition",
+        "request_no": 1,
+        "result": {
+          "admission_id": "ADM-OK",
+          "cache_deadline": 2147483647,
+          "chain": [
+            "ok.pa"
+          ],
+          "decision": "resolved",
+          "effective_deadline": 2147483647,
+          "endpoint": "10.0.0.1",
+          "generation": "ok-g1",
+          "name": "ok.pa",
+          "partition": "zone_pa",
+          "slot": 5,
+          "source": "live"
+        },
+        "service": "svc_front",
+        "slot": 5
+      },
+      {
+        "cache_after": [
+          {
+            "deadline": 2147483647,
+            "endpoint": "10.0.0.1",
+            "generation": "ok-g1",
+            "kind": "positive",
+            "name": "ok.pa",
+            "partition": "zone_pa"
+          }
+        ],
+        "etype": "request",
+        "event_id": "req_no_cross_negative",
+        "request_no": 2,
+        "result": {
+          "chain": [
+            "ghost.pa"
+          ],
+          "decision": "no_record",
+          "name": "ghost.pa",
+          "partition": "zone_pa",
+          "slot": 5,
+          "source": "live"
+        },
+        "service": "svc_front",
+        "slot": 5
+      },
+      {
+        "cache_after": [
+          {
+            "deadline": 2147483647,
+            "generation": "wide-neg-g1",
+            "kind": "negative",
+            "name": "lonely.wide.pa",
+            "partition": "zone_pa",
+            "proof": "PROOF-WIDE"
+          },
+          {
+            "deadline": 2147483647,
+            "endpoint": "10.0.0.1",
+            "generation": "ok-g1",
+            "kind": "positive",
+            "name": "ok.pa",
+            "partition": "zone_pa"
+          }
+        ],
+        "cache_entry_deadline": 2147483647,
+        "etype": "request",
+        "event_id": "req_lonely_denied",
+        "request_no": 3,
+        "result": {
+          "cache_deadline": 2147483647,
+          "chain": [],
+          "decision": "negative_denied",
+          "generation": "wide-neg-g1",
+          "name": "lonely.wide.pa",
+          "negative_generation": "wide-neg-g1",
+          "negative_suffix": "wide.pa",
+          "partition": "zone_pa",
+          "proof": "PROOF-WIDE",
+          "remaining_suffix": "wide.pa",
+          "slot": 6,
+          "source": "live",
+          "subtracted_subtrees": [
+            "kept.wide.pa"
+          ]
+        },
+        "service": "svc_front",
+        "slot": 6
+      },
+      {
+        "cache_after": [
+          {
+            "deadline": 2147483647,
+            "endpoint": "10.0.0.1",
+            "generation": "kept-g1",
+            "kind": "positive",
+            "name": "kept.wide.pa",
+            "partition": "zone_pa"
+          },
+          {
+            "deadline": 2147483647,
+            "generation": "wide-neg-g1",
+            "kind": "negative",
+            "name": "lonely.wide.pa",
+            "partition": "zone_pa",
+            "proof": "PROOF-WIDE"
+          },
+          {
+            "deadline": 2147483647,
+            "endpoint": "10.0.0.1",
+            "generation": "ok-g1",
+            "kind": "positive",
+            "name": "ok.pa",
+            "partition": "zone_pa"
+          }
+        ],
+        "cache_entry_deadline": 2147483647,
+        "etype": "request",
+        "event_id": "req_kept_alive",
+        "request_no": 4,
+        "result": {
+          "admission_id": "ADM-OK",
+          "cache_deadline": 2147483647,
+          "chain": [
+            "kept.wide.pa"
+          ],
+          "decision": "resolved",
+          "effective_deadline": 2147483647,
+          "endpoint": "10.0.0.1",
+          "generation": "kept-g1",
+          "name": "kept.wide.pa",
+          "partition": "zone_pa",
+          "slot": 6,
+          "source": "live"
+        },
+        "service": "svc_front",
+        "slot": 6
+      },
+      {
+        "cache_after": [
+          {
+            "deadline": 2147483647,
+            "endpoint": "10.0.0.1",
+            "generation": "kept-g1",
+            "kind": "positive",
+            "name": "kept.wide.pa",
+            "partition": "zone_pa"
+          },
+          {
+            "deadline": 2147483647,
+            "generation": "wide-neg-g1",
+            "kind": "negative",
+            "name": "lonely.wide.pa",
+            "partition": "zone_pa",
+            "proof": "PROOF-WIDE"
+          },
+          {
+            "deadline": 2147483647,
+            "endpoint": "10.0.0.1",
+            "generation": "ok-g1",
+            "kind": "positive",
+            "name": "ok.pa",
+            "partition": "zone_pa"
+          }
+        ],
+        "etype": "request",
+        "event_id": "req_unadmitted",
+        "request_no": 5,
+        "result": {
+          "chain": [
+            "unadm.pa"
+          ],
+          "decision": "unadmitted",
+          "endpoint": "10.9.9.9",
+          "generation": "unadm-g1",
+          "name": "unadm.pa",
+          "partition": "zone_pa",
+          "slot": 7,
+          "source": "live"
+        },
+        "service": "svc_front",
+        "slot": 7
+      },
+      {
+        "cache_after": [
+          {
+            "deadline": 2147483647,
+            "endpoint": "10.0.0.1",
+            "generation": "kept-g1",
+            "kind": "positive",
+            "name": "kept.wide.pa",
+            "partition": "zone_pa"
+          },
+          {
+            "deadline": 2147483647,
+            "generation": "wide-neg-g1",
+            "kind": "negative",
+            "name": "lonely.wide.pa",
+            "partition": "zone_pa",
+            "proof": "PROOF-WIDE"
+          },
+          {
+            "deadline": 2147483647,
+            "endpoint": "10.0.0.1",
+            "generation": "ok-g1",
+            "kind": "positive",
+            "name": "ok.pa",
+            "partition": "zone_pa"
+          }
+        ],
+        "etype": "request",
+        "event_id": "req_cycle",
+        "request_no": 6,
+        "result": {
+          "chain": [
+            "loop.x",
+            "loop.y"
+          ],
+          "cycle": [
+            "loop.x",
+            "loop.y",
+            "loop.x"
+          ],
+          "cycle_length": 3,
+          "decision": "alias_cycle",
+          "name": "loop.x",
+          "partition": "zone_pa",
+          "slot": 8,
+          "source": "live"
+        },
+        "service": "svc_front",
+        "slot": 8
+      }
+    ]
+  }
+}

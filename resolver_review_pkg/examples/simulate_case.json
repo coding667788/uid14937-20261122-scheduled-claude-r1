@@ -1,0 +1,215 @@
+{
+  "mode": "simulate",
+  "partitions": ["zone_alpha"],
+  "names": [
+    "edge.web.internal",
+    "svc.web.internal",
+    "host1.web.internal",
+    "cdn.alpha.internal",
+    "legacy.alpha.internal"
+  ],
+  "events": [
+    {
+      "id": "trust_alpha",
+      "slot": 0,
+      "etype": "trust_add",
+      "scope": {
+        "partition": "zone_alpha",
+        "suffix": "alpha.internal",
+        "generation": "scope-alpha-v1"
+      }
+    },
+    {
+      "id": "trust_web",
+      "slot": 0,
+      "etype": "trust_add",
+      "after": ["trust_alpha"],
+      "scope": {
+        "partition": "zone_alpha",
+        "suffix": "web.internal",
+        "generation": "scope-web-v1"
+      }
+    },
+    {
+      "id": "adm_ep1",
+      "slot": 0,
+      "etype": "admission_add",
+      "admission": {
+        "admission_id": "ADM-EP1",
+        "endpoint": "10.10.1.1",
+        "partition": "zone_alpha",
+        "generation": "adm-ep1-v1",
+        "expires": 50
+      }
+    },
+    {
+      "id": "adm_ep2",
+      "slot": 0,
+      "etype": "admission_add",
+      "after": ["adm_ep1"],
+      "admission": {
+        "admission_id": "ADM-EP2",
+        "endpoint": "10.10.2.2",
+        "partition": "zone_alpha",
+        "generation": "adm-ep2-v1"
+      }
+    },
+    {
+      "id": "up_edge",
+      "slot": 1,
+      "etype": "upsert",
+      "after": ["trust_web"],
+      "record": {
+        "kind": "alias",
+        "partition": "zone_alpha",
+        "name": "edge.web.internal",
+        "generation": "edge-g1",
+        "value": "svc.web.internal",
+        "expires": 40
+      }
+    },
+    {
+      "id": "up_svc",
+      "slot": 1,
+      "etype": "upsert",
+      "after": ["up_edge"],
+      "record": {
+        "kind": "alias",
+        "partition": "zone_alpha",
+        "name": "svc.web.internal",
+        "generation": "svc-g1",
+        "value": "host1.web.internal"
+      }
+    },
+    {
+      "id": "up_host",
+      "slot": 1,
+      "etype": "upsert",
+      "after": ["up_svc"],
+      "record": {
+        "kind": "positive",
+        "partition": "zone_alpha",
+        "name": "host1.web.internal",
+        "generation": "host-g1",
+        "value": "10.10.1.1"
+      }
+    },
+    {
+      "id": "up_cdn",
+      "slot": 2,
+      "etype": "upsert",
+      "after": ["trust_alpha", "adm_ep2"],
+      "record": {
+        "kind": "positive",
+        "partition": "zone_alpha",
+        "name": "cdn.alpha.internal",
+        "generation": "cdn-g1",
+        "value": "10.10.2.2"
+      }
+    },
+    {
+      "id": "up_legacy",
+      "slot": 2,
+      "etype": "upsert",
+      "after": ["trust_alpha"],
+      "record": {
+        "kind": "positive",
+        "partition": "zone_alpha",
+        "name": "legacy.alpha.internal",
+        "generation": "legacy-g1",
+        "value": "10.10.2.2",
+        "expires": 10
+      }
+    },
+    {
+      "id": "req_edge_live",
+      "slot": 7,
+      "etype": "request",
+      "after": ["up_host"],
+      "request": {
+        "name": "edge.web.internal",
+        "service": "svc_front",
+        "partition": "zone_alpha"
+      }
+    },
+    {
+      "id": "req_edge_cache",
+      "slot": 8,
+      "etype": "request",
+      "after": ["req_edge_live"],
+      "request": {
+        "name": "edge.web.internal",
+        "service": "svc_front",
+        "partition": "zone_alpha"
+      }
+    },
+    {
+      "id": "req_cdn_warm",
+      "slot": 9,
+      "etype": "request",
+      "after": ["up_cdn"],
+      "request": {
+        "name": "cdn.alpha.internal",
+        "service": "svc_jobs",
+        "partition": "zone_alpha"
+      }
+    },
+    {
+      "id": "req_legacy_warm",
+      "slot": 9,
+      "etype": "request",
+      "after": ["up_legacy"],
+      "request": {
+        "name": "legacy.alpha.internal",
+        "service": "svc_jobs",
+        "partition": "zone_alpha"
+      }
+    },
+    {
+      "id": "fail_begin",
+      "slot": 10,
+      "etype": "failure_begin",
+      "after": ["req_cdn_warm", "req_legacy_warm"],
+      "service": "svc_jobs"
+    },
+    {
+      "id": "revoke_cdn",
+      "slot": 11,
+      "etype": "revoke",
+      "after": ["fail_begin"],
+      "partition": "zone_alpha",
+      "generation": "cdn-g1"
+    },
+    {
+      "id": "req_cdn_after_revoke",
+      "slot": 12,
+      "etype": "request",
+      "after": ["revoke_cdn"],
+      "request": {
+        "name": "cdn.alpha.internal",
+        "service": "svc_jobs",
+        "partition": "zone_alpha",
+        "stale": {"enabled": true, "extra_slots": 8}
+      }
+    },
+    {
+      "id": "req_legacy_stale",
+      "slot": 12,
+      "etype": "request",
+      "after": ["revoke_cdn"],
+      "request": {
+        "name": "legacy.alpha.internal",
+        "service": "svc_jobs",
+        "partition": "zone_alpha",
+        "stale": {"enabled": true, "extra_slots": 8}
+      }
+    },
+    {
+      "id": "fail_end",
+      "slot": 16,
+      "etype": "failure_end",
+      "after": ["req_legacy_stale", "req_cdn_after_revoke"],
+      "service": "svc_jobs"
+    }
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "ok": true,
+  "result": {
+    "compare_fields": [
+      "reachability",
+      "name_list",
+      "authorization"
+    ],
+    "equivalent": false,
+    "events": 10,
+    "ideal_states_explored": 18,
+    "max_linearization_length": 10,
+    "max_states_limit": 200000,
+    "mode": "compare",
+    "truncated": false,
+    "witness": {
+      "differing_fields": [
+        {
+          "field": "authorization",
+          "label": "授权依据"
+        }
+      ],
+      "diverging_event": "req_app",
+      "diverging_slot": 5,
+      "event_sequence": [
+        "trust",
+        "adm_v1",
+        "adm_v2",
+        "up_app_v1",
+        "up_app_v2",
+        "req_app"
+      ],
+      "length": 6,
+      "observation_a": {
+        "authorization": {
+          "admission_id": "ADM-V1",
+          "endpoint": "10.0.0.10",
+          "generation": "app-v1"
+        },
+        "decision": "resolved",
+        "name": "app.alpha.internal",
+        "name_list": [
+          "app.alpha.internal"
+        ],
+        "partition": "zone_alpha",
+        "reachability": "reachable",
+        "service": "svc_x",
+        "slot": 5,
+        "source": "cache"
+      },
+      "observation_b": {
+        "authorization": {
+          "admission_id": "ADM-V2",
+          "endpoint": "10.0.0.20",
+          "generation": "app-v2"
+        },
+        "decision": "resolved",
+        "name": "app.alpha.internal",
+        "name_list": [
+          "app.alpha.internal"
+        ],
+        "partition": "zone_alpha",
+        "reachability": "reachable",
+        "service": "svc_x",
+        "slot": 5,
+        "source": "cache"
+      }
+    }
+  }
+}

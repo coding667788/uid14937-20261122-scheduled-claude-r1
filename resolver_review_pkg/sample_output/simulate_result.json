@@ -1,0 +1,321 @@
+{
+  "ok": true,
+  "result": {
+    "final_cache": [
+      {
+        "deadline": 40,
+        "endpoint": "10.10.1.1",
+        "generation": "host-g1",
+        "kind": "positive",
+        "name": "edge.web.internal",
+        "partition": "zone_alpha"
+      },
+      {
+        "deadline": 10,
+        "endpoint": "10.10.2.2",
+        "generation": "legacy-g1",
+        "kind": "positive",
+        "name": "legacy.alpha.internal",
+        "partition": "zone_alpha"
+      }
+    ],
+    "mode": "simulate",
+    "requests": 6,
+    "timeline": [
+      {
+        "etype": "trust_add",
+        "event_id": "trust_alpha",
+        "slot": 0
+      },
+      {
+        "etype": "trust_add",
+        "event_id": "trust_web",
+        "slot": 0
+      },
+      {
+        "etype": "admission_add",
+        "event_id": "adm_ep1",
+        "slot": 0
+      },
+      {
+        "etype": "admission_add",
+        "event_id": "adm_ep2",
+        "slot": 0
+      },
+      {
+        "etype": "upsert",
+        "event_id": "up_edge",
+        "slot": 1
+      },
+      {
+        "etype": "upsert",
+        "event_id": "up_svc",
+        "slot": 1
+      },
+      {
+        "etype": "upsert",
+        "event_id": "up_host",
+        "slot": 1
+      },
+      {
+        "etype": "upsert",
+        "event_id": "up_cdn",
+        "slot": 2
+      },
+      {
+        "etype": "upsert",
+        "event_id": "up_legacy",
+        "slot": 2
+      },
+      {
+        "cache_after": [
+          {
+            "deadline": 40,
+            "endpoint": "10.10.1.1",
+            "generation": "host-g1",
+            "kind": "positive",
+            "name": "edge.web.internal",
+            "partition": "zone_alpha"
+          }
+        ],
+        "cache_entry_deadline": 40,
+        "etype": "request",
+        "event_id": "req_edge_live",
+        "request_no": 1,
+        "result": {
+          "admission_id": "ADM-EP1",
+          "cache_deadline": 40,
+          "chain": [
+            "edge.web.internal",
+            "svc.web.internal",
+            "host1.web.internal"
+          ],
+          "decision": "resolved",
+          "effective_deadline": 40,
+          "endpoint": "10.10.1.1",
+          "generation": "host-g1",
+          "name": "edge.web.internal",
+          "partition": "zone_alpha",
+          "slot": 7,
+          "source": "live"
+        },
+        "service": "svc_front",
+        "slot": 7
+      },
+      {
+        "cache_after": [
+          {
+            "deadline": 40,
+            "endpoint": "10.10.1.1",
+            "generation": "host-g1",
+            "kind": "positive",
+            "name": "edge.web.internal",
+            "partition": "zone_alpha"
+          }
+        ],
+        "cache_entry_deadline": 40,
+        "etype": "request",
+        "event_id": "req_edge_cache",
+        "request_no": 2,
+        "result": {
+          "admission_id": "ADM-EP1",
+          "cache_deadline": 40,
+          "chain": [
+            "edge.web.internal"
+          ],
+          "decision": "resolved",
+          "effective_deadline": 40,
+          "endpoint": "10.10.1.1",
+          "generation": "host-g1",
+          "name": "edge.web.internal",
+          "partition": "zone_alpha",
+          "slot": 8,
+          "source": "cache"
+        },
+        "service": "svc_front",
+        "slot": 8
+      },
+      {
+        "cache_after": [
+          {
+            "deadline": 2147483647,
+            "endpoint": "10.10.2.2",
+            "generation": "cdn-g1",
+            "kind": "positive",
+            "name": "cdn.alpha.internal",
+            "partition": "zone_alpha"
+          },
+          {
+            "deadline": 40,
+            "endpoint": "10.10.1.1",
+            "generation": "host-g1",
+            "kind": "positive",
+            "name": "edge.web.internal",
+            "partition": "zone_alpha"
+          }
+        ],
+        "cache_entry_deadline": 2147483647,
+        "etype": "request",
+        "event_id": "req_cdn_warm",
+        "request_no": 3,
+        "result": {
+          "admission_id": "ADM-EP2",
+          "cache_deadline": 2147483647,
+          "chain": [
+            "cdn.alpha.internal"
+          ],
+          "decision": "resolved",
+          "effective_deadline": 2147483647,
+          "endpoint": "10.10.2.2",
+          "generation": "cdn-g1",
+          "name": "cdn.alpha.internal",
+          "partition": "zone_alpha",
+          "slot": 9,
+          "source": "live"
+        },
+        "service": "svc_jobs",
+        "slot": 9
+      },
+      {
+        "cache_after": [
+          {
+            "deadline": 2147483647,
+            "endpoint": "10.10.2.2",
+            "generation": "cdn-g1",
+            "kind": "positive",
+            "name": "cdn.alpha.internal",
+            "partition": "zone_alpha"
+          },
+          {
+            "deadline": 40,
+            "endpoint": "10.10.1.1",
+            "generation": "host-g1",
+            "kind": "positive",
+            "name": "edge.web.internal",
+            "partition": "zone_alpha"
+          },
+          {
+            "deadline": 10,
+            "endpoint": "10.10.2.2",
+            "generation": "legacy-g1",
+            "kind": "positive",
+            "name": "legacy.alpha.internal",
+            "partition": "zone_alpha"
+          }
+        ],
+        "cache_entry_deadline": 10,
+        "etype": "request",
+        "event_id": "req_legacy_warm",
+        "request_no": 4,
+        "result": {
+          "admission_id": "ADM-EP2",
+          "cache_deadline": 10,
+          "chain": [
+            "legacy.alpha.internal"
+          ],
+          "decision": "resolved",
+          "effective_deadline": 10,
+          "endpoint": "10.10.2.2",
+          "generation": "legacy-g1",
+          "name": "legacy.alpha.internal",
+          "partition": "zone_alpha",
+          "slot": 9,
+          "source": "live"
+        },
+        "service": "svc_jobs",
+        "slot": 9
+      },
+      {
+        "etype": "failure_begin",
+        "event_id": "fail_begin",
+        "slot": 10
+      },
+      {
+        "cache_invalidated": 1,
+        "etype": "revoke",
+        "event_id": "revoke_cdn",
+        "slot": 11
+      },
+      {
+        "cache_after": [
+          {
+            "deadline": 40,
+            "endpoint": "10.10.1.1",
+            "generation": "host-g1",
+            "kind": "positive",
+            "name": "edge.web.internal",
+            "partition": "zone_alpha"
+          },
+          {
+            "deadline": 10,
+            "endpoint": "10.10.2.2",
+            "generation": "legacy-g1",
+            "kind": "positive",
+            "name": "legacy.alpha.internal",
+            "partition": "zone_alpha"
+          }
+        ],
+        "etype": "request",
+        "event_id": "req_cdn_after_revoke",
+        "request_no": 5,
+        "result": {
+          "chain": [
+            "cdn.alpha.internal"
+          ],
+          "decision": "no_record",
+          "name": "cdn.alpha.internal",
+          "partition": "zone_alpha",
+          "slot": 12,
+          "source": "live"
+        },
+        "service": "svc_jobs",
+        "slot": 12
+      },
+      {
+        "cache_after": [
+          {
+            "deadline": 40,
+            "endpoint": "10.10.1.1",
+            "generation": "host-g1",
+            "kind": "positive",
+            "name": "edge.web.internal",
+            "partition": "zone_alpha"
+          },
+          {
+            "deadline": 10,
+            "endpoint": "10.10.2.2",
+            "generation": "legacy-g1",
+            "kind": "positive",
+            "name": "legacy.alpha.internal",
+            "partition": "zone_alpha"
+          }
+        ],
+        "cache_entry_deadline": 10,
+        "etype": "request",
+        "event_id": "req_legacy_stale",
+        "request_no": 6,
+        "result": {
+          "admission_id": "ADM-EP2",
+          "chain": [
+            "legacy.alpha.internal"
+          ],
+          "decision": "resolved",
+          "effective_deadline": 18,
+          "endpoint": "10.10.2.2",
+          "generation": "legacy-g1",
+          "name": "legacy.alpha.internal",
+          "partition": "zone_alpha",
+          "slot": 12,
+          "source": "stale"
+        },
+        "service": "svc_jobs",
+        "slot": 12
+      },
+      {
+        "etype": "failure_end",
+        "event_id": "fail_end",
+        "slot": 16
+      }
+    ]
+  }
+}

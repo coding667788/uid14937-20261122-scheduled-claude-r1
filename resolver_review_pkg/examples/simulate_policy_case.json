@@ -1,0 +1,205 @@
+{
+  "mode": "simulate",
+  "partitions": ["zone_pa", "zone_pb"],
+  "names": [
+    "ok.pa",
+    "ghost.pa",
+    "wide.pa",
+    "lonely.wide.pa",
+    "kept.wide.pa",
+    "unadm.pa",
+    "loop.x",
+    "loop.y"
+  ],
+  "events": [
+    {
+      "id": "trust_pa",
+      "slot": 0,
+      "etype": "trust_add",
+      "scope": {
+        "partition": "zone_pa",
+        "suffix": "",
+        "generation": "scope-pa-v1"
+      }
+    },
+    {
+      "id": "trust_pb",
+      "slot": 0,
+      "etype": "trust_add",
+      "after": ["trust_pa"],
+      "scope": {
+        "partition": "zone_pb",
+        "suffix": "",
+        "generation": "scope-pb-v1"
+      }
+    },
+    {
+      "id": "adm_ok",
+      "slot": 0,
+      "etype": "admission_add",
+      "admission": {
+        "admission_id": "ADM-OK",
+        "endpoint": "10.0.0.1",
+        "partition": "zone_pa",
+        "generation": "adm-ok-v1"
+      }
+    },
+    {
+      "id": "up_pa_ok",
+      "slot": 1,
+      "etype": "upsert",
+      "after": ["trust_pa", "adm_ok"],
+      "record": {
+        "kind": "positive",
+        "partition": "zone_pa",
+        "name": "ok.pa",
+        "generation": "ok-g1",
+        "value": "10.0.0.1"
+      }
+    },
+    {
+      "id": "up_pb_root_neg",
+      "slot": 1,
+      "etype": "upsert",
+      "after": ["trust_pb"],
+      "record": {
+        "kind": "negative",
+        "partition": "zone_pb",
+        "name": "",
+        "generation": "pb-root-neg",
+        "proof": "PROOF-PB-ROOT"
+      }
+    },
+    {
+      "id": "up_pa_wide_neg",
+      "slot": 2,
+      "etype": "upsert",
+      "after": ["trust_pa"],
+      "record": {
+        "kind": "negative",
+        "partition": "zone_pa",
+        "name": "wide.pa",
+        "generation": "wide-neg-g1",
+        "proof": "PROOF-WIDE"
+      }
+    },
+    {
+      "id": "up_pa_kept",
+      "slot": 2,
+      "etype": "upsert",
+      "after": ["up_pa_wide_neg", "adm_ok"],
+      "record": {
+        "kind": "positive",
+        "partition": "zone_pa",
+        "name": "kept.wide.pa",
+        "generation": "kept-g1",
+        "value": "10.0.0.1"
+      }
+    },
+    {
+      "id": "up_pa_unadm",
+      "slot": 3,
+      "etype": "upsert",
+      "after": ["trust_pa"],
+      "record": {
+        "kind": "positive",
+        "partition": "zone_pa",
+        "name": "unadm.pa",
+        "generation": "unadm-g1",
+        "value": "10.9.9.9"
+      }
+    },
+    {
+      "id": "up_loop_x",
+      "slot": 4,
+      "etype": "upsert",
+      "after": ["trust_pa"],
+      "record": {
+        "kind": "alias",
+        "partition": "zone_pa",
+        "name": "loop.x",
+        "generation": "loopx-g1",
+        "value": "loop.y"
+      }
+    },
+    {
+      "id": "up_loop_y",
+      "slot": 4,
+      "etype": "upsert",
+      "after": ["up_loop_x"],
+      "record": {
+        "kind": "alias",
+        "partition": "zone_pa",
+        "name": "loop.y",
+        "generation": "loopy-g1",
+        "value": "loop.x"
+      }
+    },
+    {
+      "id": "req_cross_partition",
+      "slot": 5,
+      "etype": "request",
+      "after": ["up_pa_ok", "up_pb_root_neg"],
+      "request": {
+        "name": "ok.pa",
+        "service": "svc_front",
+        "partition": "zone_pa"
+      }
+    },
+    {
+      "id": "req_no_cross_negative",
+      "slot": 5,
+      "etype": "request",
+      "after": ["req_cross_partition"],
+      "request": {
+        "name": "ghost.pa",
+        "service": "svc_front",
+        "partition": "zone_pa"
+      }
+    },
+    {
+      "id": "req_lonely_denied",
+      "slot": 6,
+      "etype": "request",
+      "after": ["up_pa_kept"],
+      "request": {
+        "name": "lonely.wide.pa",
+        "service": "svc_front",
+        "partition": "zone_pa"
+      }
+    },
+    {
+      "id": "req_kept_alive",
+      "slot": 6,
+      "etype": "request",
+      "after": ["req_lonely_denied"],
+      "request": {
+        "name": "kept.wide.pa",
+        "service": "svc_front",
+        "partition": "zone_pa"
+      }
+    },
+    {
+      "id": "req_unadmitted",
+      "slot": 7,
+      "etype": "request",
+      "after": ["up_pa_unadm"],
+      "request": {
+        "name": "unadm.pa",
+        "service": "svc_front",
+        "partition": "zone_pa"
+      }
+    },
+    {
+      "id": "req_cycle",
+      "slot": 8,
+      "etype": "request",
+      "after": ["up_loop_y"],
+      "request": {
+        "name": "loop.x",
+        "service": "svc_front",
+        "partition": "zone_pa"
+      }
+    }
+  ]
+}

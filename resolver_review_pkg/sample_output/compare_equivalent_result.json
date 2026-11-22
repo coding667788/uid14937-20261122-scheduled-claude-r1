@@ -1,0 +1,17 @@
+{
+  "ok": true,
+  "result": {
+    "compare_fields": [
+      "reachability",
+      "name_list",
+      "authorization"
+    ],
+    "equivalent": true,
+    "events": 10,
+    "ideal_states_explored": 33,
+    "max_linearization_length": 10,
+    "max_states_limit": 200000,
+    "mode": "compare",
+    "truncated": false
+  }
+}
